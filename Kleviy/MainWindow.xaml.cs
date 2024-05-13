@@ -20,9 +20,38 @@ namespace Kleviy
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MainWindow Window;
         public MainWindow()
         {
             InitializeComponent();
+            Window = this;
+        }
+
+        private void MinButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+        private void MovingWin(object sender, RoutedEventArgs e)
+        {
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                MainWindow.Window.DragMove();
+            }
+        }
+
+        private void PasswordBox_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -3,10 +3,101 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Kleviy"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"       
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
         
+        MouseDown="MovingWin"
+        
+        Title="Авторизация" Height="700" Width="400"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent">
+    <Grid>
+        <!--углы-->
+        <Border 
+                Background="white"
+                BorderBrush="White"
+                BorderThickness="5"
+                CornerRadius="5,5,5,5">
+        </Border>
+        <!--кнопка минимизации-->
+        <Button 
+                x:Name="MinButton"
+                Content="-" 
+                Click="MinButton_Click" 
+                HorizontalAlignment="Left" 
+                Margin="301,10,0,658" 
+                Width="46" 
+                Background="Gray" 
+                RenderTransformOrigin="0.55,0.344" 
+                Foreground="#DD000000" 
+                BorderBrush="{x:Null}" />
+        <!--кнопка выхода-->
+        <Button 
+                Name="CloseButton" 
+                Content="x" 
+                Click="CloseButton_Click" 
+                HorizontalAlignment="Left" 
+                Margin="352,10,0,658" 
+                Width="38" 
+                Background="#FFCA4949" 
+                RenderTransformOrigin="0.55,0.344" 
+                BorderBrush="{x:Null}" />
+        <!--Бокс для логина-->
+
+
+        <TextBox
+         x:Name="LoginBox"
+         materialDesign:HintAssist.HelperText=""
+         materialDesign:HintAssist.Hint="Логин" 
+         Margin="28,363,28,305" 
+         FontSize="16" 
+         CaretBrush="Black" 
+         SelectionBrush="#FF5A5A5A" 
+         FontFamily="Nirmala UI">
+        </TextBox>
+
+        <!--Бокс для пароля-->
+
+        <StackPanel Margin="29,415,28,213">
+            <PasswordBox x:Name="PasswordBoxT"
+        materialDesign:HintAssist.Hint="Пароль"    
+        materialDesign:TextFieldAssist.HasClearButton="True"
+        IsEnabled="{Binding ElementName=RevealPasswordControl, Path=IsChecked}"
+        FontSize="16" 
+        CaretBrush="Black" 
+        SelectionBrush="#FF5A5A5A" 
+        Height="35" 
+        FontFamily="Nirmala UI" Password="" />
+
+            <CheckBox
+     x:Name="PasswordCheck"
+     Content="Запомнить меня" 
+     Background="Black" 
+     BorderBrush="#89000000" 
+     FontSize="14" 
+     Height="22" 
+     Checked="PasswordBox_Checked" 
+     IsChecked="{Binding checkBoxLogin}"
+     FontFamily="Nirmala UI" 
+     Foreground="#FF545454" />
+        </StackPanel>
+        <!--кнопка входа-->
+        <Button 
+        x:Name="Login" 
+        Content="Войти" 
+        Margin="21,529,0,0" 
+        Height="49" 
+        VerticalAlignment="Top" 
+        HorizontalAlignment="Left" 
+        Width="355" 
+        Background="{x:Null}" 
+        BorderBrush="#FF5F5F5F" 
+        Foreground="#DD000000" 
+        FontSize="24" 
+        Click="Login_Click" 
+        FontFamily="Nirmala UI"/>
     </Grid>
 </Window>
