@@ -22,6 +22,15 @@
                 BorderThickness="5"
                 CornerRadius="5,5,5,5">
         </Border>
+        <!--Картинка-->
+
+        <Image 
+       Source="/png/glavnaya.png" 
+       Margin="0,46,0,0" 
+       HorizontalAlignment="Center" 
+       Width="254" 
+       Height="220" 
+       VerticalAlignment="Top"/>
         <!--кнопка минимизации-->
         <Button 
                 x:Name="MinButton"
@@ -30,7 +39,7 @@
                 HorizontalAlignment="Left" 
                 Margin="301,10,0,658" 
                 Width="46" 
-                Background="Gray" 
+                Background="White" 
                 RenderTransformOrigin="0.55,0.344" 
                 Foreground="#DD000000" 
                 BorderBrush="{x:Null}" />
@@ -45,8 +54,8 @@
                 Background="#FFCA4949" 
                 RenderTransformOrigin="0.55,0.344" 
                 BorderBrush="{x:Null}" />
+        
         <!--Бокс для логина-->
-
 
         <TextBox
          x:Name="LoginBox"
@@ -73,16 +82,16 @@
         FontFamily="Nirmala UI" Password="" />
 
             <CheckBox
-     x:Name="PasswordCheck"
-     Content="Запомнить меня" 
-     Background="Black" 
-     BorderBrush="#89000000" 
-     FontSize="14" 
-     Height="22" 
-     Checked="PasswordBox_Checked" 
-     IsChecked="{Binding checkBoxLogin}"
-     FontFamily="Nirmala UI" 
-     Foreground="#FF545454" />
+         x:Name="PasswordCheck"
+         Content="Запомнить меня" 
+         Background="Black" 
+         BorderBrush="#89000000" 
+         FontSize="14" 
+         Height="22" 
+         Checked="PasswordBox_Checked" 
+         IsChecked="{Binding checkBoxLogin}"
+         FontFamily="Nirmala UI" 
+         Foreground="#FF545454" />
         </StackPanel>
         <!--кнопка входа-->
         <Button 

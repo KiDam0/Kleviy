@@ -1,0 +1,268 @@
+﻿<Window x:Class="Kleviy.Home"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kleviy"
+        mc:Ignorable="d"
+        
+        Title="Главная страница" Height="600" Width="900"
+
+        MouseDown="MovingWin"
+
+        MinHeight="600"
+        MinWidth="900"
+        MaxWidth="900"
+
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent">
+    <Grid>
+        <!--Углы-->
+
+        <Border 
+        Background="white"
+        BorderBrush="White"
+        BorderThickness="5"
+        CornerRadius="5,5,0,5"/>
+
+        <!--Кнопки шапки-->
+
+        <!--Минимизация-->
+
+        <Button 
+         x:Name="MinButton" 
+         Content="-" 
+         Click="MinButton_Click" 
+         HorizontalAlignment="Left" 
+         Margin="810,4,0,0" 
+         Width="37" 
+         Background="White" 
+         RenderTransformOrigin="0.55,0.344" 
+         Foreground="#DD000000" 
+         BorderBrush="{x:Null}" 
+         Height="32" 
+         VerticalAlignment="Top" />
+
+        <!--Закрытие-->
+
+        <Button 
+         x:Name="CloseButton" 
+         Content="x" 
+         Click="CloseButton_Click" 
+         Margin="852,4,0,0" 
+         Background="#FFCA4949" 
+         RenderTransformOrigin="0.55,0.344" 
+         Height="32" 
+         VerticalAlignment="Top" 
+         HorizontalAlignment="Left" 
+         Width="38" 
+         BorderBrush="{x:Null}" />
+
+        <!--Товары-->
+
+        <Button 
+          x:Name="TovBt" 
+          Content="Товары"
+          Click="TovBt_Click"
+          Margin="0,47,730,0" 
+          Background="White" 
+          BorderBrush="White"    
+          Foreground="#DD000000" 
+          FontSize="18" 
+          Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
+          HorizontalAlignment="Right" 
+          Width="160" 
+          Height="32" 
+          VerticalAlignment="Top" 
+          FontFamily="Nirmala UI"/>
+
+
+        <!--Поставщики-->
+
+        <Button 
+          x:Name="PostBt" 
+          Content="Поставщики"
+          Click="PostBt_Click"
+          Margin="0,47,556,0" 
+          Background="White" 
+          BorderBrush="White" 
+          Foreground="#DD000000" 
+          FontSize="18" 
+          Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
+          HorizontalAlignment="Right" 
+          Width="160" 
+          Height="32" 
+          VerticalAlignment="Top" 
+          FontFamily="Nirmala UI"/>
+
+        <!--Главная-->
+
+        <Button 
+          x:Name="GlavBt"
+          Click="GlavBt_Click"
+          Margin="0,26,0,0" 
+          Background="{x:Null}" 
+          BorderBrush="{x:Null}" 
+          Foreground="#DD000000" 
+          FontSize="18" 
+          Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
+          HorizontalAlignment="Center" 
+          Width="202" 
+          Height="181" 
+          VerticalAlignment="Top">
+            <Image 
+      Height="186" 
+      Width="167" 
+      Source="/png/glavnaya.png"/>
+        </Button>
+
+        <!--Сотрудники-->
+
+        <Button 
+          x:Name="SotrBt" 
+          Content="Сотрудники"
+          Click="SotrBt_Click"
+          Margin="0,47,189,0" 
+          Background="White" 
+          BorderBrush="White" 
+          Foreground="#DD000000" 
+          FontSize="18" 
+          Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
+          HorizontalAlignment="Right" 
+          Width="160" 
+          Height="32" 
+          VerticalAlignment="Top" 
+          FontFamily="Nirmala UI" />
+
+        <!--Профиль-->
+
+        <Button 
+          x:Name="ProfileBt" 
+          Content="Профиль" 
+          Margin="0,47,10,0" 
+          Background="White" 
+          BorderBrush="White" 
+          Foreground="#DD000000" 
+          FontSize="18" 
+          Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
+          HorizontalAlignment="Right" 
+          Width="160" 
+          Height="32" 
+          VerticalAlignment="Top" 
+          Click="ProfileBt_Click" 
+          FontFamily="Nirmala UI"/>
+
+        <!--Главное окно-->
+
+        <Grid x:Name="Main" Visibility="Visible">
+            <Button Margin="706,234,40,0"
+                x:Name="ExecuteQuery"
+                Content="Найти"
+                Click="ExecuteQuery_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+            <Button Margin="706,300,40,0"
+    x:Name="LoadToWord"
+    Content="Сохранить"
+    Click="LoadToWord_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+            <TextBox
+            x:Name="NumberSupl"
+                Height="50"
+                VerticalAlignment="Top"
+                materialDesign:HintAssist.Hint="№ поставщика"
+                MaxLength="40"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto" Margin="30,216,750,0" FontSize="17" />
+            <TextBox
+            x:Name="MoneyText"
+                Height="50"
+                VerticalAlignment="Top"
+                materialDesign:HintAssist.Hint="Общая стоимость"
+                MaxLength="40"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto" Margin="170,216,586,0" FontSize="17" />
+            <TextBox
+            x:Name="ProductText"
+                Height="50"
+                VerticalAlignment="Top"
+                materialDesign:HintAssist.Hint="Количество товара"
+                MaxLength="40"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto" Margin="324,216,380,0" FontSize="17" />
+
+            <DataGrid
+            x:Name="AllGrid"
+                AutoGenerateColumns="True"
+                CanUserAddRows="False"
+                HeadersVisibility="All"
+                ItemsSource="{Binding connectionString}"
+                SelectionUnit="{Binding ElementName=selectionUnitComboBox, Path=SelectedValue}" Margin="0,300,251,0" SelectionChanged="AllGrid_SelectionChanged">
+            </DataGrid>
+
+            <ComboBox
+                x:Name="AllComboBox"
+                materialDesign:HintAssist.Hint="" 
+                Margin="538,241,251,0" 
+                VerticalAlignment="Top" 
+                FontWeight="Bold" 
+                SelectionChanged="AllComboBox_SelectionChanged"
+                SelectedItem="{Binding SelectedTable}"
+                ItemsSource="{Binding Name}" Height="25">
+            </ComboBox>
+        </Grid>
+
+        <!--Окно товаров-->
+
+        <Grid x:Name="Products" Visibility="Collapsed" >
+
+            <DataGrid
+                 x:Name="ProductGrid"
+                 AutoGenerateColumns="True"
+                 CanUserAddRows="True"
+                 ItemsSource="{Binding connectionString}"
+                 SelectionMode="Extended"
+                 SelectionUnit="Cell" Margin="0,217,10,0"  Foreground="Black" />
+
+            <Button Margin="736,180,10,388"
+                    x:Name="LoadDataProduct"
+                    Content="Загрузить данные"
+                    Click="LoadDataProduct_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
+        </Grid>
+
+        <!--Окно поставщиков-->
+
+        <Grid x:Name="Suppliers" Visibility="Collapsed" >
+            <DataGrid
+                 x:Name="SuppliersGrid"
+                 AutoGenerateColumns="True"
+                 CanUserAddRows="True"
+                 ItemsSource="{Binding connectionString}"
+                 SelectionMode="Extended"
+                 SelectionUnit="Cell" Margin="0,217,10,0"  Foreground="Black" SelectionChanged="SuppliersGrid_SelectionChanged" />
+            <Button Margin="736,180,10,388"
+                x:Name="LoadDataSuppliers"
+                Content="Загрузить данные"
+                Click="LoadDataSuppliers_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
+
+        </Grid>
+
+        <!--Окно сотрудников-->
+
+        <Grid x:Name="Staff" Visibility="Collapsed" >
+            <DataGrid
+             x:Name="StaffGrid"
+             AutoGenerateColumns="True"
+             CanUserAddRows="True"
+             ItemsSource="{Binding connectionString}"
+             SelectionMode="Extended"
+             SelectionUnit="Cell" Margin="0,217,10,0"  Foreground="Black" SelectionChanged="SuppliersGrid_SelectionChanged" />
+            <Button Margin="736,180,10,388"
+                x:Name="LoadDataStaff"
+                Content="Загрузить данные"
+                Click="LoadDataStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
+        </Grid>
+
+    </Grid>
+</Window>
