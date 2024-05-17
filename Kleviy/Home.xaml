@@ -158,7 +158,7 @@
 
         <!--Главное окно-->
 
-        <Grid x:Name="Main" Visibility="Visible">
+        <Grid x:Name="Main" Visibility="Hidden">
             <Button Margin="706,234,40,0"
                 x:Name="ExecuteQuery"
                 Content="Найти"
@@ -217,18 +217,30 @@
 
         <Grid x:Name="Products" Visibility="Collapsed" >
 
-            <DataGrid
-                 x:Name="ProductGrid"
-                 AutoGenerateColumns="True"
-                 CanUserAddRows="True"
-                 ItemsSource="{Binding connectionString}"
-                 SelectionMode="Extended"
-                 SelectionUnit="Cell" Margin="0,217,10,0"  Foreground="Black" />
+            <!--база данных админа-->
+            <DataGrid x:Name="dataGridProducts" AutoGenerateColumns="False" Margin="0,217,10,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
+                    <DataGridTextColumn Header="Наименование" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Количество" Binding="{Binding Colums}" />
+                    <DataGridTextColumn Header="Цена" Binding="{Binding Price}" />
+                </DataGrid.Columns>
+            </DataGrid>
 
-            <Button Margin="736,180,10,388"
-                    x:Name="LoadDataProduct"
-                    Content="Загрузить данные"
-                    Click="LoadDataProduct_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
+            <Button Margin="10,180,736,0"
+                x:Name="SaveDataProducts"
+                Content="Сохранить данные"
+                Click="SaveChanges_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+
+            <Button Margin="184,180,562,0"
+                x:Name="DeleteDataProducts"
+                Content="Добавить данные"
+                Click="AddNewProduct_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+
+            <Button Margin="732,180,10,0"
+                x:Name="AddDataProducts"
+                Content="Удалить данные"
+                Click="DeleteProduct_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
         </Grid>
 
         <!--Окно поставщиков-->
@@ -250,8 +262,10 @@
 
         <!--Окно сотрудников-->
 
-        <Grid x:Name="Staff" Visibility="Collapsed" >
+        <Grid x:Name="Staff" Visibility="Visible" >
+
             <DataGrid
+             Visibility="Collapsed"
              x:Name="StaffGrid"
              AutoGenerateColumns="True"
              CanUserAddRows="True"
@@ -262,7 +276,33 @@
                 x:Name="LoadDataStaff"
                 Content="Загрузить данные"
                 Click="LoadDataStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
-        </Grid>
+            <!--БАЗА ДАННЫХ АДМИНА-->
+            <DataGrid x:Name="dataGridStaff" AutoGenerateColumns="False" Margin="0,217,10,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding idStaff}" />
+                    <DataGridTextColumn Header="Фамилия" Binding="{Binding surnameStaff}" />
+                    <DataGridTextColumn Header="Имя" Binding="{Binding nameStaff}" />
+                    <DataGridTextColumn Header="Отчество" Binding="{Binding patronymicStaff}" />
+                    <DataGridTextColumn Header="Дата рождения" Binding="{Binding dateStaff}" />
+                    <DataGridTextColumn Header="Должность" Binding="{Binding postStaff}" />
+                    <DataGridTextColumn Header="Вход" Binding="{Binding loginStaff}" />
+                </DataGrid.Columns>
+            </DataGrid>
 
+            <Button Margin="10,180,736,0"
+            x:Name="SaveDataStaff"
+            Content="Сохранить данные"
+            Click="SaveChangesStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+
+            <Button Margin="184,180,562,0"
+            x:Name="DeleteDataStaff"
+            Content="Добавить данные"
+            Click="AddNewProductStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+
+            <Button Margin="732,180,10,0"
+            x:Name="AddDataStaff"
+            Content="Удалить данные"
+            Click="DeleteProductStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+        </Grid>
     </Grid>
 </Window>

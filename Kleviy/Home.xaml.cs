@@ -18,6 +18,9 @@ using Spire.Doc;
 using Spire.Doc.Documents;
 using System.Windows.Markup;
 using System.Web.UI.WebControls.WebParts;
+using System.Runtime.Remoting.Contexts;
+using NpgsqlTypes;
+using static Kleviy.Home;
 
 
 namespace Kleviy
@@ -28,17 +31,17 @@ namespace Kleviy
     public partial class Home : Window
     {
         public Home Window;
+        string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
         public Home()
         {
-            InitializeComponent();
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
             InitializeComponent();
             List<string> tables = GetTablesFromDB();
             AllComboBox.ItemsSource = tables;
             Window = this;
-            ProductGrid.ItemsSource = connectionString;
             SuppliersGrid.ItemsSource = connectionString;
             StaffGrid.ItemsSource = connectionString;
+            dataGridProducts.ItemsSource = GetProducts();
+            dataGridStaff.ItemsSource = GetStaff();
         }
         private void MovingWin(object sender, RoutedEventArgs e)
         {
@@ -47,6 +50,9 @@ namespace Kleviy
                 MainWindow.Window.DragMove();
             }
         }
+        /// <summary>
+        /// ОКНО ТОВАРОВ
+        /// </summary>
         private void TovBt_Click(object sender, RoutedEventArgs e)
         {
             if (Main.Visibility == Visibility.Visible | Suppliers.Visibility == Visibility.Visible | Staff.Visibility == Visibility.Visible)
@@ -65,7 +71,100 @@ namespace Kleviy
             }
             GC.Collect();
         }
+        private string _connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+        //получение информации из базы данных
+        private List<Product> GetProducts()
+        {
+            List<Product> products = new List<Product>();
+            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM Товар", connection))
+                {
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            products.Add(new Product
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                Colums = (int)reader.GetFieldValue<decimal>(2),
+                                Price = reader.GetDecimal(3)
+                            });
+                        }
+                    }
+                }
+            }
+            return products;
+        }
+        //кнопка сохранения данных
+        private void SaveChanges_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (NpgsqlCommand command = new NpgsqlCommand("UPDATE Товар SET Наименование = @name, Цена = @price, Количество=@colums WHERE id_товар = @id", connection))
+                    {
+                        command.Parameters.AddWithValue("name", ((Product)dataGridProducts.SelectedItem).Name);
+                        command.Parameters.AddWithValue("price", ((Product)dataGridProducts.SelectedItem).Price);
+                        command.Parameters.AddWithValue("id", ((Product)dataGridProducts.SelectedItem).Id);
+                        command.Parameters.AddWithValue("colums", ((Product)dataGridProducts.SelectedItem).Colums);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                MessageBox.Show("Изменения сохранены");
+                dataGridProducts.ItemsSource = GetProducts();
+            }
+            catch (NpgsqlException ex)
+            {
+                MessageBox.Show("Ошибка при сохранении изменений: " + ex.Message);
+            }
+        }
+        //кнопка добавления данных
+        private void AddNewProduct_Click(object sender, RoutedEventArgs e)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO Товар (Наименование, Цена, Количество) VALUES (@name, @price, @colums)", connection))
+                {
+                    command.Parameters.AddWithValue("name", "Новый продукт");
+                    command.Parameters.AddWithValue("price", 0);
+                    command.Parameters.AddWithValue("colums", 0);
+                    command.ExecuteNonQuery();
+                }
+            }
+            dataGridProducts.ItemsSource = GetProducts();
+        }
+        //кнопка удаления данных
+        private void DeleteProduct_Click(object sender, RoutedEventArgs e)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand("DELETE FROM Товар WHERE id_товар = @id", connection))
+                {
+                    command.Parameters.AddWithValue("id", ((Product)dataGridProducts.SelectedItem).Id);
+                    command.ExecuteNonQuery();
+                }
+            }
+            dataGridProducts.ItemsSource = GetProducts();
+        }
 
+
+        public class Product
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public decimal Price { get; set; }
+            public int Colums { get; set; }
+        }
+        /// <summary>
+        /// ОКНО ПОСТАВЩИКОВ
+        /// </summary>
         private void PostBt_Click(object sender, RoutedEventArgs e)
         {
             if (Main.Visibility == Visibility.Visible | Products.Visibility == Visibility.Visible | Staff.Visibility == Visibility.Visible)
@@ -84,7 +183,9 @@ namespace Kleviy
             }
             GC.Collect();
         }
-
+        /// <summary>
+        /// ГЛАВНОЕ ОКНО
+        /// </summary>
         private void GlavBt_Click(object sender, RoutedEventArgs e)
         {
             if (Suppliers.Visibility == Visibility.Visible | Products.Visibility == Visibility.Visible | Staff.Visibility == Visibility.Visible)
@@ -103,7 +204,9 @@ namespace Kleviy
             }
             GC.Collect();
         }
-
+        /// <summary>
+        /// ОКНО СОТРУДНИКОВ
+        /// </summary>
         private void SotrBt_Click(object sender, RoutedEventArgs e)
         {
             if (Suppliers.Visibility == Visibility.Visible | Products.Visibility == Visibility.Visible | Main.Visibility == Visibility.Visible)
@@ -121,6 +224,123 @@ namespace Kleviy
                 Staff.IsEnabled = true;
             }
             GC.Collect();
+        }
+
+        public class User
+        {
+            public string Name { get; set; }
+            public string Password { get; set; }
+            public string Role { get; set; }
+
+            public User(string name, string password, string role)
+            {
+                Name = name;
+                Password = password;
+                Role = role;
+            }
+        }
+
+        User adminUser = new User("admin", "password", "admin");
+        User staffUser = new User("staff", "password", "staff");
+
+        private void SaveChangesStaff_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (NpgsqlCommand command = new NpgsqlCommand("UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, Id_должность = @postStaff, Id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection))
+                    {
+                        command.Parameters.AddWithValue("surnameStaff", ((Staffs)dataGridStaff.SelectedItem).surnameStaff);
+                        command.Parameters.AddWithValue("nameStaff", ((Staffs)dataGridStaff.SelectedItem).nameStaff);
+                        command.Parameters.AddWithValue("patronymicStaff", ((Staffs)dataGridStaff.SelectedItem).patronymicStaff);
+                        command.Parameters.AddWithValue("dateStaff", ((Staffs)dataGridStaff.SelectedItem).dateStaff);
+                        command.Parameters.AddWithValue("postStaff", ((Staffs)dataGridStaff.SelectedItem).postStaff);
+                        command.Parameters.AddWithValue("loginStaff", ((Staffs)dataGridStaff.SelectedItem).loginStaff);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                MessageBox.Show("Изменения сохранены");
+                dataGridStaff.ItemsSource = GetStaff();
+            }
+            catch (NpgsqlException ex)
+            {
+                MessageBox.Show("Ошибка при сохранении изменений: " + ex.Message);
+            }
+        }
+        //кнопка добавления данных
+        private void AddNewProductStaff_Click(object sender, RoutedEventArgs e)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO Сотрудник (Фамилия, Имя, Отчество, Дата_рождения, Id_должность, Id_Вход) VALUES (@surnameStaff, @nameStaff, @patronymicStaff, @dateStaff, @postStaff, @loginStaff)", connection))
+                {
+                    command.Parameters.AddWithValue("surnameStaff", "");
+                    command.Parameters.AddWithValue("nameStaff", "");
+                    command.Parameters.AddWithValue("patronymicStaff", "");
+                    command.Parameters.AddWithValue("dateStaff"); 
+                    command.Parameters.AddWithValue("postStaff", 3);
+                    command.Parameters.AddWithValue("loginStaff");
+                    command.ExecuteNonQuery();
+                }
+            }
+            dataGridStaff.ItemsSource = GetStaff();
+        }
+        //кнопка удаления данных
+        private void DeleteProductStaff_Click(object sender, RoutedEventArgs e)
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand("DELETE FROM Сотрудник WHERE id_сотрудник = @idStaff", connection))
+                {
+                    command.Parameters.AddWithValue("idStaff", ((Staffs)dataGridStaff.SelectedItem).idStaff);
+                    command.ExecuteNonQuery();
+                }
+            }
+            dataGridStaff.ItemsSource = GetStaff();
+        }
+        //элементы для базы данных
+        public class Staffs
+        {
+            public int idStaff { get; set; }
+            public string surnameStaff { get; set; }
+            public string nameStaff { get; set; }
+            public string patronymicStaff { get; set; }
+            public DateTime dateStaff { get; set; }
+            public int postStaff { get; set; }
+            public int loginStaff { get; set; }
+        }
+        //присвоение значений для datagrid из базы данных
+        private List<Staffs> GetStaff()
+        {
+            List<Staffs> staff = new List<Staffs>();
+            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM Сотрудник", connection))
+                {
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            staff.Add(new Staffs
+                            {
+                                idStaff = reader.GetInt32(0),
+                                surnameStaff = reader.GetString(1),
+                                nameStaff = reader.GetString(2),
+                                patronymicStaff = reader.GetString(3),
+                                dateStaff = reader.GetDateTime(4),
+                                postStaff = reader.GetInt32(5),
+                                loginStaff = reader.GetInt32(6)
+                            });
+                        }
+                    }
+                }
+            }
+            return staff;
         }
 
         private void ProfileBt_Click(object sender, RoutedEventArgs e)
@@ -305,24 +525,6 @@ namespace Kleviy
                 adapter.Fill(staffDataTable);
 
                 StaffGrid.ItemsSource = staffDataTable.DefaultView; // Привязка данных к DataGrid
-            }
-            GC.Collect();
-        }
-        //загрузка таблицы товаров
-        private void LoadDataProduct_Click(object sender, RoutedEventArgs e)
-        {
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123"; //строка подключения
-            string query = "SELECT * FROM Товар"; //запрос
-
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                NpgsqlCommand command = new NpgsqlCommand(query, connection);
-                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
-                System.Data.DataTable dataTable = new System.Data.DataTable();
-
-                adapter.Fill(dataTable);
-
-                ProductGrid.ItemsSource = dataTable.DefaultView; // Привязка данных к DataGrid
             }
             GC.Collect();
         }
