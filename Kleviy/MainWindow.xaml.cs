@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Npgsql;
+using Spire.DocViewer.Forms;
+using static Kleviy.Home;
 
 namespace Kleviy
 {
@@ -108,8 +110,6 @@ namespace Kleviy
             }
             GC.Collect();
         }
-
-
         //сопоставление логина и пароля
 
         private bool CheckCredentials(string login, string password)

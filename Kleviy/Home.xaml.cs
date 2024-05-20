@@ -43,11 +43,14 @@ namespace Kleviy
             dataGridProducts.ItemsSource = GetProducts();
             dataGridStaff.ItemsSource = GetStaff();
         }
+
+        //движение окна
+
         private void MovingWin(object sender, RoutedEventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                MainWindow.Window.DragMove();
+                Window.DragMove();
             }
         }
         /// <summary>
@@ -72,7 +75,9 @@ namespace Kleviy
             GC.Collect();
         }
         private string _connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+
         //получение информации из базы данных
+
         private List<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
@@ -98,7 +103,9 @@ namespace Kleviy
             }
             return products;
         }
+
         //кнопка сохранения данных
+
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -123,7 +130,9 @@ namespace Kleviy
                 MessageBox.Show("Ошибка при сохранении изменений: " + ex.Message);
             }
         }
+
         //кнопка добавления данных
+
         private void AddNewProduct_Click(object sender, RoutedEventArgs e)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
@@ -139,7 +148,9 @@ namespace Kleviy
             }
             dataGridProducts.ItemsSource = GetProducts();
         }
+
         //кнопка удаления данных
+
         private void DeleteProduct_Click(object sender, RoutedEventArgs e)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
@@ -209,6 +220,9 @@ namespace Kleviy
         /// </summary>
         private void SotrBt_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow mainWindow = new MainWindow();
+            string login = mainWindow.LoginBox.Text;
+            Properties.Settings.Default.Login = login;
             if (Suppliers.Visibility == Visibility.Visible | Products.Visibility == Visibility.Visible | Main.Visibility == Visibility.Visible)
             {
                 Products.Visibility = Visibility.Collapsed;
@@ -222,26 +236,47 @@ namespace Kleviy
 
                 Staff.Visibility = Visibility.Visible;
                 Staff.IsEnabled = true;
+
+                if (login == "Adm1")
+                {
+                    dataGridStaff.Visibility = Visibility.Visible;
+                    StaffGrid.Visibility = Visibility.Collapsed;
+
+                    SaveDataStaff.Visibility = Visibility.Visible;
+                    AddDataStaff.Visibility = Visibility.Visible;
+                    DeleteDataStaff.Visibility = Visibility.Visible;
+                    LoadDataStaff.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    dataGridStaff.Visibility = Visibility.Collapsed;
+                    StaffGrid.Visibility = Visibility.Visible;
+
+                    SaveDataStaff.Visibility = Visibility.Collapsed;
+                    AddDataStaff.Visibility = Visibility.Collapsed;
+                    DeleteDataStaff.Visibility = Visibility.Collapsed;
+                    LoadDataStaff.Visibility = Visibility.Visible;
+                }
             }
             GC.Collect();
         }
 
         public class User
         {
-            public string Name { get; set; }
+            public string Login { get; set; }
             public string Password { get; set; }
             public string Role { get; set; }
 
-            public User(string name, string password, string role)
+            public User(string login, string password, string role)
             {
-                Name = name;
+                Login = login;
                 Password = password;
                 Role = role;
             }
         }
 
-        User adminUser = new User("admin", "password", "admin");
-        User staffUser = new User("staff", "password", "staff");
+        //"UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, id_должность = @postStaff, id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection
+        //сохранить изменения 
 
         private void SaveChangesStaff_Click(object sender, RoutedEventArgs e)
         {
@@ -250,15 +285,21 @@ namespace Kleviy
                 using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
                 {
                     connection.Open();
-                    using (NpgsqlCommand command = new NpgsqlCommand("UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, Id_должность = @postStaff, Id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection))
+                    using (NpgsqlCommand command = new NpgsqlCommand("UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, id_должность = @postStaff, id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection))
                     {
-                        command.Parameters.AddWithValue("surnameStaff", ((Staffs)dataGridStaff.SelectedItem).surnameStaff);
-                        command.Parameters.AddWithValue("nameStaff", ((Staffs)dataGridStaff.SelectedItem).nameStaff);
-                        command.Parameters.AddWithValue("patronymicStaff", ((Staffs)dataGridStaff.SelectedItem).patronymicStaff);
-                        command.Parameters.AddWithValue("dateStaff", ((Staffs)dataGridStaff.SelectedItem).dateStaff);
-                        command.Parameters.AddWithValue("postStaff", ((Staffs)dataGridStaff.SelectedItem).postStaff);
-                        command.Parameters.AddWithValue("loginStaff", ((Staffs)dataGridStaff.SelectedItem).loginStaff);
-                        command.ExecuteNonQuery();
+                        foreach (Staffs staff in dataGridStaff.Items.OfType<Staffs>())
+                        {
+                            command.Parameters.Clear();
+                            command.Parameters.AddWithValue("surnameStaff", staff.surnameStaff);
+                            command.Parameters.AddWithValue("nameStaff", staff.nameStaff);
+                            command.Parameters.AddWithValue("patronymicStaff", staff.patronymicStaff);
+                            command.Parameters.AddWithValue("dateStaff", staff.dateStaff);
+                            command.Parameters.AddWithValue("postStaff", staff.postStaff);
+                            command.Parameters.AddWithValue("loginStaff", staff.loginStaff);
+                            command.Parameters.AddWithValue("idStaff", staff.idStaff);
+                            command.ExecuteNonQuery();
+                        }
+
                     }
                 }
                 MessageBox.Show("Изменения сохранены");
@@ -269,26 +310,44 @@ namespace Kleviy
                 MessageBox.Show("Ошибка при сохранении изменений: " + ex.Message);
             }
         }
+
         //кнопка добавления данных
+
         private void AddNewProductStaff_Click(object sender, RoutedEventArgs e)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-                using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO Сотрудник (Фамилия, Имя, Отчество, Дата_рождения, Id_должность, Id_Вход) VALUES (@surnameStaff, @nameStaff, @patronymicStaff, @dateStaff, @postStaff, @loginStaff)", connection))
+                if (dataGridStaff.SelectedItem == null)
                 {
-                    command.Parameters.AddWithValue("surnameStaff", "");
-                    command.Parameters.AddWithValue("nameStaff", "");
-                    command.Parameters.AddWithValue("patronymicStaff", "");
-                    command.Parameters.AddWithValue("dateStaff"); 
-                    command.Parameters.AddWithValue("postStaff", 3);
-                    command.Parameters.AddWithValue("loginStaff");
-                    command.ExecuteNonQuery();
+                    MessageBox.Show("Please select a staff member to edit.");
+                    return;
                 }
+
+                using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO Сотрудник (Фамилия, Имя, Отчество, Дата_рождения, id_должность, id_Вход) VALUES (@surnameStaff, @nameStaff, @patronymicStaff, @dateStaff, @postStaff, @loginStaff)", connection))
+                    {
+                        command.Parameters.AddWithValue("surnameStaff", ((Staffs)dataGridStaff.SelectedItem).surnameStaff);
+                        command.Parameters.AddWithValue("nameStaff", ((Staffs)dataGridStaff.SelectedItem).nameStaff);
+                        command.Parameters.AddWithValue("patronymicStaff", ((Staffs)dataGridStaff.SelectedItem).patronymicStaff);
+                        command.Parameters.AddWithValue("dateStaff", ((Staffs)dataGridStaff.SelectedItem).dateStaff);
+                        command.Parameters.AddWithValue("postStaff", ((Staffs)dataGridStaff.SelectedItem).postStaff);
+                        command.Parameters.AddWithValue("loginStaff", ((Staffs)dataGridStaff.SelectedItem).loginStaff);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                dataGridStaff.ItemsSource = GetStaff();
+                MessageBox.Show("Новый сотрудник добавлен");
             }
-            dataGridStaff.ItemsSource = GetStaff();
+            catch (NpgsqlException ex)
+            {
+                MessageBox.Show("Ошибка при добавлении сотрудника: " + ex.Message);
+            }
         }
+
         //кнопка удаления данных
+
         private void DeleteProductStaff_Click(object sender, RoutedEventArgs e)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
@@ -302,18 +361,22 @@ namespace Kleviy
             }
             dataGridStaff.ItemsSource = GetStaff();
         }
+
         //элементы для базы данных
+
         public class Staffs
         {
             public int idStaff { get; set; }
             public string surnameStaff { get; set; }
             public string nameStaff { get; set; }
             public string patronymicStaff { get; set; }
-            public DateTime dateStaff { get; set; }
+            public DateTime dateStaff { get; set; } = new DateTime(1, 1, 1);
             public int postStaff { get; set; }
             public int loginStaff { get; set; }
         }
+
         //присвоение значений для datagrid из базы данных
+
         private List<Staffs> GetStaff()
         {
             List<Staffs> staff = new List<Staffs>();
@@ -357,9 +420,12 @@ namespace Kleviy
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+            System.Windows.Application.Current.Shutdown();
             GC.Collect();
         }
+
         //сохранение таблицы в документе word
+
         private void ExportToWord(DataTable dt)
         {
             // Создаем новый документ
@@ -465,7 +531,9 @@ namespace Kleviy
             }
             GC.Collect();
         }
+
         //получение таблиц из базы данных для combobox
+
         private List<string> GetTablesFromDB()
         {
             List<string> tables = new List<string>();
@@ -492,7 +560,9 @@ namespace Kleviy
         {
 
         }
+
         //загрузка таблицы поставщиков
+
         private void LoadDataSuppliers_Click(object sender, RoutedEventArgs e)
         {
             string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
@@ -510,7 +580,9 @@ namespace Kleviy
             }
             GC.Collect();
         }
+
         //загрузка таблицы сотрудников
+
         private void LoadDataStaff_Click(object sender, RoutedEventArgs e)
         {
             string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";

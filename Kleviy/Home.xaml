@@ -158,7 +158,7 @@
 
         <!--Главное окно-->
 
-        <Grid x:Name="Main" Visibility="Hidden">
+        <Grid x:Name="Main" Visibility="Visible">
             <Button Margin="706,234,40,0"
                 x:Name="ExecuteQuery"
                 Content="Найти"
@@ -262,7 +262,7 @@
 
         <!--Окно сотрудников-->
 
-        <Grid x:Name="Staff" Visibility="Visible" >
+        <Grid x:Name="Staff" Visibility="Collapsed" >
 
             <DataGrid
              Visibility="Collapsed"
@@ -277,7 +277,10 @@
                 Content="Загрузить данные"
                 Click="LoadDataStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
             <!--БАЗА ДАННЫХ АДМИНА-->
-            <DataGrid x:Name="dataGridStaff" AutoGenerateColumns="False" Margin="0,217,10,0">
+            <DataGrid x:Name="dataGridStaff" 
+                      AutoGenerateColumns="False" 
+                      Margin="0,217,10,0"
+                      Visibility="Collapsed">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding idStaff}" />
                     <DataGridTextColumn Header="Фамилия" Binding="{Binding surnameStaff}" />
@@ -291,16 +294,19 @@
 
             <Button Margin="10,180,736,0"
             x:Name="SaveDataStaff"
+            Visibility="Collapsed"
             Content="Сохранить данные"
             Click="SaveChangesStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
 
             <Button Margin="184,180,562,0"
-            x:Name="DeleteDataStaff"
+            x:Name="AddDataStaff"
+            Visibility="Collapsed"
             Content="Добавить данные"
             Click="AddNewProductStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
 
             <Button Margin="732,180,10,0"
-            x:Name="AddDataStaff"
+            x:Name="DeleteDataStaff"
+            Visibility="Collapsed"
             Content="Удалить данные"
             Click="DeleteProductStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
         </Grid>
