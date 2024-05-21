@@ -17,6 +17,9 @@ using Microsoft.Win32;
 using Npgsql;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
+using NpgsqlTypes;
+using Spire.DocViewer.Forms;
+using System.Web.UI.WebControls;
 
 
 namespace Kleviy
@@ -26,15 +29,13 @@ namespace Kleviy
     /// </summary>
     public partial class Profile : Window
     {
-        private string _userImagePath;
-        MainWindow aut = new MainWindow();
+        MainWindow aut;
         private string _connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+
         public Profile()
         {
-
             InitializeComponent();
             Profile_Loaded();
-            // Загрузите изображение после загрузки формы профиля
             LoadImage();
         }
         //движение окна
@@ -44,11 +45,6 @@ namespace Kleviy
             {
                 DragMove();
             }
-        }
-        //изображение
-        private void Image_Loaded(object sender, RoutedEventArgs e)
-        {
-
         }
         //минимизация
         private void MinButton_Click(object sender, RoutedEventArgs e)
@@ -63,33 +59,40 @@ namespace Kleviy
         }
         public void Profile_Loaded()
         {
-            // Get the login and password from the settings
-            string login = Properties.Settings.Default.Login;
-            string password = Properties.Settings.Default.Password;
+            LoadUserData();
+            LoadImage();
+        }
+        private void LoadUserData()
+        {
+            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
 
-            using (var conn = new NpgsqlConnection("Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123"))
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
-                conn.Open();
-                using (var cmd = new NpgsqlCommand("SELECT Фамилия, Имя FROM Сотрудник JOIN Данные_для_входа ON id_Вход = id_Вход WHERE Логин = @login AND Пароль = @password", conn))
+                connection.Open();
+                string sql = "SELECT Имя, Фамилия FROM Сотрудник " +
+                              "INNER JOIN Данные_для_входа ON id_Вход = id_Вход " +
+                              "WHERE Логин = @login AND Пароль = @password";
+
+                string login = Properties.Settings.Default.Login;
+                string password = Properties.Settings.Default.Password;
+                using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
                 {
-                    cmd.Parameters.AddWithValue("login", login);
-                    cmd.Parameters.AddWithValue("password", password);
-                    using (var reader = cmd.ExecuteReader())
+                    command.Parameters.AddWithValue("login", login);
+                    command.Parameters.AddWithValue("password", password);
+
+                    using (NpgsqlDataReader reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.Read())
                         {
-                            var lastName = reader.GetString(0);
-                            var firstName = reader.GetString(1);
-                            Console.WriteLine($"First name: {firstName}, Last name: {lastName}");
-                            nameText.Text = firstName;
-                            secondnameText.Text = lastName;
-                            // Используйте полученные данные в приложении
+                            secondnameText.Text = reader.GetString(1);
+                            nameText.Text = reader.GetString(0);
+                            Console.WriteLine($"{secondnameText.Text}, {nameText.Text}");
                         }
                     }
                 }
+                connection.Close();
             }
         }
-
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();

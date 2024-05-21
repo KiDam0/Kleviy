@@ -74,30 +74,26 @@ namespace Kleviy
             bool? checkBoxLogin = PasswordCheck.IsChecked == true;
             await Task.Delay(400);
 
-            //чекбокс запомнить меня
-
-            if (PasswordCheck.IsChecked == true)
-            {
-                // Запомнить логин и пароль
-                Properties.Settings.Default.Login = login;
-                Properties.Settings.Default.Password = password;
-                Properties.Settings.Default.checkBox = (bool)checkBoxLogin;
-                Properties.Settings.Default.Save();
-            }
-            else
-            {
-                Properties.Settings.Default.Login = "";
-                Properties.Settings.Default.Password = "";
-                Properties.Settings.Default.checkBox = (bool)checkBoxLogin;
-                Properties.Settings.Default.Save();
-            }
-
             //проверка логина и пароля перед входом
 
             if (CheckCredentials(login, password))
             {
-                login = LoginBox.Text;
-                password = PasswordBoxT.Password;
+                // Сохраняем логин и пароль в настройках
+                if (PasswordCheck.IsChecked == true)
+                {
+                    Properties.Settings.Default.Login = login;
+                    Properties.Settings.Default.Password = password;
+                    Properties.Settings.Default.checkBox = (bool)checkBoxLogin;
+                    Properties.Settings.Default.Save();
+                }
+                else
+                {
+                    Properties.Settings.Default.Login = "";
+                    Properties.Settings.Default.Password = "";
+                    Properties.Settings.Default.checkBox = (bool)checkBoxLogin;
+                    Properties.Settings.Default.Save();
+                }
+
                 Home glavnaya = new Home();
                 glavnaya.Show();
                 this.Close();
@@ -105,8 +101,6 @@ namespace Kleviy
             else
             {
                 MessageBox.Show("Неверный логин или пароль!");
-                LoginBox.Text = "";
-                PasswordBoxT.Password = "";
             }
             GC.Collect();
         }
