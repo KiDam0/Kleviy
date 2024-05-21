@@ -69,9 +69,9 @@ namespace Kleviy
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
                 connection.Open();
-                string sql = "SELECT Имя, Фамилия FROM Сотрудник " +
-                              "INNER JOIN Данные_для_входа ON id_Вход = id_Вход " +
-                              "WHERE Логин = @login AND Пароль = @password";
+                string sql = "SELECT Сотрудник.Имя, Сотрудник.Фамилия FROM Сотрудник " +
+                              "INNER JOIN Данные_для_входа ON Сотрудник.id_Вход = Данные_для_входа.id_Вход " +
+                              "WHERE Данные_для_входа.Логин = @login AND Данные_для_входа.Пароль = @password";
 
                 string login = Properties.Settings.Default.Login;
                 string password = Properties.Settings.Default.Password;

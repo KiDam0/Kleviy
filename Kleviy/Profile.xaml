@@ -64,7 +64,25 @@
         VerticalAlignment="Top"
         Width="164"
         Margin="116,130,0,0"/>
-        <Button Height="23" HorizontalAlignment="Left" Margin="276,283,0,0" Name="btnOpen" VerticalAlignment="Top" Width="74" Click="btnOpen_Click">Open</Button>
+        <Image
+        HorizontalAlignment="Left"
+        Name="ChangeProfilePNG"
+        Height="37"
+        VerticalAlignment="Top"
+        Width="47"
+        Margin="287,244,0,0"/>
+        <Button Height="74" 
+                HorizontalAlignment="Center" 
+                Margin="276,259,0,0" 
+                Name="btnOpen" 
+                VerticalAlignment="Top" 
+                Width="74" 
+                Click="btnOpen_Click" ClipToBounds="True" Background="White" BorderBrush="White">
+            <Image
+                Width="46"
+                Height="56"
+                Source = "/png/Photo.png" RenderTransformOrigin="0.244,0.532"/>
+        </Button>
         <TextBlock TextWrapping="Wrap" Text="Фамилия:" Margin="10,329,200,314" FontFamily="Nirmala UI" FontSize="36" FontWeight="Bold"/>
         <TextBlock TextWrapping="Wrap" x:Name="secondnameText" Text="..." Margin="10,386,167,257" FontFamily="Nirmala UI" FontSize="36"/>
         <TextBlock TextWrapping="Wrap" Text="Имя:" Margin="10,443,221,200" FontFamily="Nirmala UI" FontSize="36" FontWeight="Bold"/>
