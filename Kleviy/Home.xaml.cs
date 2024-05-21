@@ -165,7 +165,7 @@ namespace Kleviy
             dataGridProducts.ItemsSource = GetProducts();
         }
 
-
+        //класс для шапки таблицы товаров
         public class Product
         {
             public int Id { get; set; }
@@ -260,7 +260,7 @@ namespace Kleviy
             }
             GC.Collect();
         }
-
+        //класс для данных
         public class User
         {
             public string Login { get; set; }
@@ -405,11 +405,13 @@ namespace Kleviy
             }
             return staff;
         }
-
+        /// <summary>
+        /// ПРОФИЛЬ
+        /// </summary>
         private void ProfileBt_Click(object sender, RoutedEventArgs e)
         {
-            Profile Profile = new Profile();
-            Profile.Show();
+            Profile profile = new Profile();
+            profile.Show();
         }
 
         private void MinButton_Click(object sender, RoutedEventArgs e)
@@ -420,7 +422,7 @@ namespace Kleviy
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            System.Windows.Application.Current.Shutdown();
+            Application.Current.Shutdown();
             GC.Collect();
         }
 

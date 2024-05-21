@@ -58,5 +58,17 @@ namespace Kleviy.Properties {
                 this["checkBox"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserImagePath {
+            get {
+                return ((string)(this["UserImagePath"]));
+            }
+            set {
+                this["UserImagePath"] = value;
+            }
+        }
     }
 }

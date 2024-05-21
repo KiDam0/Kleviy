@@ -17,16 +17,57 @@
         WindowStartupLocation="CenterScreen"
         Background="Gainsboro">
     <Grid>
+
+        <!--Кнопки шапки-->
+
+        <!--Минимизация-->
+
+        <Button 
+         x:Name="MinButton" 
+         Content="-" 
+         Click="MinButton_Click" 
+         HorizontalAlignment="Left" 
+         Margin="276,4,0,0" 
+         Width="61" 
+         Background="White" 
+         RenderTransformOrigin="0.55,0.344" 
+         Foreground="#DD000000" 
+         BorderBrush="{x:Null}" 
+         Height="32" 
+         VerticalAlignment="Top" />
+
+        <!--Закрытие-->
+
+        <Button 
+         x:Name="CloseButton" 
+         Content="x" 
+         Click="CloseButton_Click" 
+         Margin="342,4,0,0" 
+         Background="#FFCA4949" 
+         RenderTransformOrigin="0.55,0.344" 
+         Height="32" 
+         VerticalAlignment="Top" 
+         HorizontalAlignment="Left" 
+         Width="48" 
+         BorderBrush="{x:Null}" />
         <Border Background="white"
         BorderBrush="White"
         BorderThickness="1"
         CornerRadius="5,5,5,5" Margin="10,58,10,22">
+
+
         </Border>
         <Image
         HorizontalAlignment="Left"
+        Name="ProfilePNG"
         Height="164"
         VerticalAlignment="Top"
         Width="164"
         Loaded="Image_Loaded" Margin="116,130,0,0"/>
+        <Button Height="23" HorizontalAlignment="Left" Margin="276,283,0,0" Name="btnOpen" VerticalAlignment="Top" Width="74" Click="btnOpen_Click">Open</Button>
+        <TextBlock TextWrapping="Wrap" Text="Фамилия:" Margin="10,329,200,314" FontFamily="Nirmala UI" FontSize="36" FontWeight="Bold"/>
+        <TextBlock TextWrapping="Wrap" x:Name="secondnameText" Text="..." Margin="10,386,167,257" FontFamily="Nirmala UI" FontSize="36"/>
+        <TextBlock TextWrapping="Wrap" Text="Имя:" Margin="10,443,221,200" FontFamily="Nirmala UI" FontSize="36" FontWeight="Bold"/>
+        <TextBlock TextWrapping="Wrap" x:Name="nameText" Text="..." Margin="10,505,167,138" FontFamily="Nirmala UI" FontSize="36"/>
     </Grid>
 </Window>
