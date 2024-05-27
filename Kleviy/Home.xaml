@@ -175,22 +175,6 @@
                 MaxLength="40"
                 TextWrapping="Wrap"
                 VerticalScrollBarVisibility="Auto" Margin="30,216,750,0" FontSize="17" />
-            <TextBox
-            x:Name="MoneyText"
-                Height="50"
-                VerticalAlignment="Top"
-                materialDesign:HintAssist.Hint="Общая стоимость"
-                MaxLength="40"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto" Margin="170,216,586,0" FontSize="17" />
-            <TextBox
-            x:Name="ProductText"
-                Height="50"
-                VerticalAlignment="Top"
-                materialDesign:HintAssist.Hint="Количество товара"
-                MaxLength="40"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto" Margin="324,216,380,0" FontSize="17" />
 
             <DataGrid
             x:Name="AllGrid"
