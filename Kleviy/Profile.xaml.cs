@@ -79,7 +79,7 @@ namespace Kleviy
                 connection.Close();
             }
         }
-        private void btnOpen_Click(object sender, RoutedEventArgs e)
+        private async void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             // Откройте диалоговое окно для выбора файла
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -100,20 +100,31 @@ namespace Kleviy
 
                 // Сохраните путь к выбранному изображению
                 string oldImagePath = Properties.Settings.Default.UserImagePath;
-                string newImagePath = Path.Combine(Path.GetDirectoryName(oldImagePath), $"image_{DateTime.Now:yyyyMMddHHmmss}.png");
-                File.Copy(openFileDialog.FileName, newImagePath, true);
-
-                // Обновите путь к изображению в настройках
-                Properties.Settings.Default.UserImagePath = newImagePath;
-                Properties.Settings.Default.Save();
-
-                // Задержка перед удалением файла
-                Task.Delay(1500).Wait();
-
-                // Удалите старое изображение
-                if (File.Exists(oldImagePath))
+                if (!string.IsNullOrEmpty(oldImagePath))
                 {
-                    File.Delete(oldImagePath);
+                    string newImagePath = Path.Combine(Path.GetDirectoryName(oldImagePath), $"image_{DateTime.Now:yyyyMMddHHmmss}.png");
+                    File.Copy(openFileDialog.FileName, newImagePath, true);
+
+                    // Обновите путь к изображению в настройках
+                    Properties.Settings.Default.UserImagePath = newImagePath;
+                    Properties.Settings.Default.Save();
+
+                    // Задержка перед удалением файла
+                    await Task.Delay(1500);
+
+                    // Удалите старое изображение
+                    if (File.Exists(oldImagePath))
+                    {
+                        File.Delete(oldImagePath);
+                    }
+                }
+                else
+                {
+                    // Если oldImagePath пуст, то можно использовать другой путь по умолчанию
+                    string newImagePath = Path.Combine(Environment.CurrentDirectory, $"image_{DateTime.Now:yyyyMMddHHmmss}.png");
+                    File.Copy(openFileDialog.FileName, newImagePath, true);
+                    Properties.Settings.Default.UserImagePath = newImagePath;
+                    Properties.Settings.Default.Save();
                 }
 
                 // Загрузите изображение в элемент Image

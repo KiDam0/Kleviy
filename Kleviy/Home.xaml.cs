@@ -88,6 +88,8 @@ namespace Kleviy
                             });
                         }
                     }
+                    connection.Close();
+                    GC.Collect();
                 }
             }
             return products;
@@ -109,6 +111,8 @@ namespace Kleviy
                         command.Parameters.AddWithValue("id", ((Product)dataGridProducts.SelectedItem).Id);
                         command.Parameters.AddWithValue("colums", ((Product)dataGridProducts.SelectedItem).Colums);
                         command.ExecuteNonQuery();
+                        connection.Close();
+                        GC.Collect();
                     }
                 }
                 MessageBox.Show("Изменения сохранены");
@@ -133,6 +137,8 @@ namespace Kleviy
                     command.Parameters.AddWithValue("price", 0);
                     command.Parameters.AddWithValue("colums", 0);
                     command.ExecuteNonQuery();
+                    connection.Close();
+                    GC.Collect();
                 }
             }
             dataGridProducts.ItemsSource = GetProducts();
@@ -149,6 +155,8 @@ namespace Kleviy
                 {
                     command.Parameters.AddWithValue("id", ((Product)dataGridProducts.SelectedItem).Id);
                     command.ExecuteNonQuery();
+                    connection.Close();
+                    GC.Collect();
                 }
             }
             dataGridProducts.ItemsSource = GetProducts();
@@ -231,7 +239,7 @@ namespace Kleviy
                     dataGridStaff.Visibility = Visibility.Visible;
                     StaffGrid.Visibility = Visibility.Collapsed;
 
-                    SaveDataStaff.Visibility = Visibility.Visible;
+                    
                     AddDataStaff.Visibility = Visibility.Visible;
                     DeleteDataStaff.Visibility = Visibility.Visible;
                     LoadDataStaff.Visibility = Visibility.Collapsed;
@@ -241,7 +249,7 @@ namespace Kleviy
                     dataGridStaff.Visibility = Visibility.Collapsed;
                     StaffGrid.Visibility = Visibility.Visible;
 
-                    SaveDataStaff.Visibility = Visibility.Collapsed;
+                    
                     AddDataStaff.Visibility = Visibility.Collapsed;
                     DeleteDataStaff.Visibility = Visibility.Collapsed;
                     LoadDataStaff.Visibility = Visibility.Visible;
@@ -267,72 +275,78 @@ namespace Kleviy
         //"UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, id_должность = @postStaff, id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection
         //сохранить изменения 
 
-        private void SaveChangesStaff_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    using (NpgsqlCommand command = new NpgsqlCommand("UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, id_должность = @postStaff, id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection))
-                    {
-                        foreach (Staffs staff in dataGridStaff.Items.OfType<Staffs>())
-                        {
-                            command.Parameters.Clear();
-                            command.Parameters.AddWithValue("surnameStaff", staff.surnameStaff);
-                            command.Parameters.AddWithValue("nameStaff", staff.nameStaff);
-                            command.Parameters.AddWithValue("patronymicStaff", staff.patronymicStaff);
-                            command.Parameters.AddWithValue("dateStaff", staff.dateStaff);
-                            command.Parameters.AddWithValue("postStaff", staff.postStaff);
-                            command.Parameters.AddWithValue("loginStaff", staff.loginStaff);
-                            command.Parameters.AddWithValue("idStaff", staff.idStaff);
-                            command.ExecuteNonQuery();
-                        }
+        //private void SaveChangesStaff_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+        //        {
+        //            connection.Open();
+        //            using (NpgsqlCommand command = new NpgsqlCommand("UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, id_должность = @postStaff, id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection))
+        //            {
+        //                foreach (Staffs staff in dataGridStaff.Items.OfType<Staffs>())
+        //                {
+        //                    command.Parameters.Clear();
+        //                    command.Parameters.AddWithValue("surnameStaff", staff.surnameStaff);
+        //                    command.Parameters.AddWithValue("nameStaff", staff.nameStaff);
+        //                    command.Parameters.AddWithValue("patronymicStaff", staff.patronymicStaff);
+        //                    command.Parameters.AddWithValue("dateStaff", staff.dateStaff);
+        //                    command.Parameters.AddWithValue("postStaff", staff.postStaff);
+        //                    command.Parameters.AddWithValue("loginStaff", staff.loginStaff);
+        //                    command.Parameters.AddWithValue("idStaff", staff.idStaff);
+        //                    command.ExecuteNonQuery();
+        //                    connection.Close();
+        //                    GC.Collect();
+        //                }
 
-                    }
-                }
-                MessageBox.Show("Изменения сохранены");
-                dataGridStaff.ItemsSource = GetStaff();
-            }
-            catch (NpgsqlException ex)
-            {
-                MessageBox.Show("Ошибка при сохранении изменений: " + ex.Message);
-            }
-        }
+        //            }
+        //        }
+        //        MessageBox.Show("Изменения сохранены");
+        //        dataGridStaff.ItemsSource = GetStaff();
+        //    }
+        //    catch (NpgsqlException ex)
+        //    {
+        //        MessageBox.Show("Ошибка при сохранении изменений: " + ex.Message);
+        //    }
+        //}
 
         //кнопка добавления данных
 
         private void AddNewProductStaff_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (dataGridStaff.SelectedItem == null)
-                {
-                    MessageBox.Show("Please select a staff member to edit.");
-                    return;
-                }
+            AddStaff add = new AddStaff();
+            add.Show();
+            //try
+            //{
+            //    if (dataGridStaff.SelectedItem == null)
+            //    {
+            //        MessageBox.Show("Please select a staff member to edit.");
+            //        return;
+            //    }
 
-                using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO Сотрудник (Фамилия, Имя, Отчество, Дата_рождения, id_должность, id_Вход) VALUES (@surnameStaff, @nameStaff, @patronymicStaff, @dateStaff, @postStaff, @loginStaff)", connection))
-                    {
-                        command.Parameters.AddWithValue("surnameStaff", ((Staffs)dataGridStaff.SelectedItem).surnameStaff);
-                        command.Parameters.AddWithValue("nameStaff", ((Staffs)dataGridStaff.SelectedItem).nameStaff);
-                        command.Parameters.AddWithValue("patronymicStaff", ((Staffs)dataGridStaff.SelectedItem).patronymicStaff);
-                        command.Parameters.AddWithValue("dateStaff", ((Staffs)dataGridStaff.SelectedItem).dateStaff);
-                        command.Parameters.AddWithValue("postStaff", ((Staffs)dataGridStaff.SelectedItem).postStaff);
-                        command.Parameters.AddWithValue("loginStaff", ((Staffs)dataGridStaff.SelectedItem).loginStaff);
-                        command.ExecuteNonQuery();
-                    }
-                }
-                dataGridStaff.ItemsSource = GetStaff();
-                MessageBox.Show("Новый сотрудник добавлен");
-            }
-            catch (NpgsqlException ex)
-            {
-                MessageBox.Show("Ошибка при добавлении сотрудника: " + ex.Message);
-            }
+            //    using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            //    {
+            //        connection.Open();
+            //        using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO Сотрудник (Фамилия, Имя, Отчество, Дата_рождения, id_должность, id_Вход) VALUES (@surnameStaff, @nameStaff, @patronymicStaff, @dateStaff, @postStaff, @loginStaff)", connection))
+            //        {
+            //            command.Parameters.AddWithValue("surnameStaff", ((Staffs)dataGridStaff.SelectedItem).surnameStaff);
+            //            command.Parameters.AddWithValue("nameStaff", ((Staffs)dataGridStaff.SelectedItem).nameStaff);
+            //            command.Parameters.AddWithValue("patronymicStaff", ((Staffs)dataGridStaff.SelectedItem).patronymicStaff);
+            //            command.Parameters.AddWithValue("dateStaff", ((Staffs)dataGridStaff.SelectedItem).dateStaff);
+            //            command.Parameters.AddWithValue("postStaff", ((Staffs)dataGridStaff.SelectedItem).postStaff);
+            //            command.Parameters.AddWithValue("loginStaff", ((Staffs)dataGridStaff.SelectedItem).loginStaff);
+            //            command.ExecuteNonQuery();
+            //            connection.Close();
+            //            GC.Collect();
+            //        }
+            //    }
+            //    dataGridStaff.ItemsSource = GetStaff();
+            //    MessageBox.Show("Новый сотрудник добавлен");
+            //}
+            //catch (NpgsqlException ex)
+            //{
+            //    MessageBox.Show("Ошибка при добавлении сотрудника: " + ex.Message);
+            //}
         }
 
         //кнопка удаления данных
@@ -346,6 +360,8 @@ namespace Kleviy
                 {
                     command.Parameters.AddWithValue("idStaff", ((Staffs)dataGridStaff.SelectedItem).idStaff);
                     command.ExecuteNonQuery();
+                    connection.Close();
+                    GC.Collect();
                 }
             }
             dataGridStaff.ItemsSource = GetStaff();
@@ -391,6 +407,8 @@ namespace Kleviy
                         }
                     }
                 }
+                connection.Close();
+                GC.Collect();
             }
             return staff;
         }
@@ -518,6 +536,7 @@ namespace Kleviy
                         dataTable.Load(reader);
                         AllGrid.ItemsSource = dataTable.DefaultView;
                     }
+                    conn.Close();
                 }
             }
             GC.Collect();
@@ -543,6 +562,7 @@ namespace Kleviy
                     }
                 }
                 GC.Collect();
+                conn.Close();
             }
             return tables;
         }

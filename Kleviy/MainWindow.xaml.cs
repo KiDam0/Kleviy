@@ -107,9 +107,11 @@ namespace Kleviy
                     command.Parameters.AddWithValue("@Password", password);
 
                     int count = Convert.ToInt32(command.ExecuteScalar());
+                    connection.Close();
+                    GC.Collect();
                     return count > 0;
                 }
-            }
+            }  
         }
         private void LoadSettings()
         {

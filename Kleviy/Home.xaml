@@ -158,7 +158,7 @@
 
         <!--Главное окно-->
 
-        <Grid x:Name="Main" Visibility="Visible">
+        <Grid x:Name="Main" Visibility="Collapsed">
             <Button Margin="706,234,40,0"
                 x:Name="ExecuteQuery"
                 Content="Найти"
@@ -246,7 +246,7 @@
 
         <!--Окно сотрудников-->
 
-        <Grid x:Name="Staff" Visibility="Collapsed" >
+        <Grid x:Name="Staff" Visibility="Visible" >
 
             <DataGrid
              Visibility="Collapsed"
@@ -277,14 +277,8 @@
             </DataGrid>
 
             <Button Margin="10,180,736,0"
-            x:Name="SaveDataStaff"
-            Visibility="Collapsed"
-            Content="Сохранить данные"
-            Click="SaveChangesStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
-
-            <Button Margin="184,180,562,0"
             x:Name="AddDataStaff"
-            Visibility="Collapsed"
+            Visibility="Visible"
             Content="Добавить данные"
             Click="AddNewProductStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
 
