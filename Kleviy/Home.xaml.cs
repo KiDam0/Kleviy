@@ -255,6 +255,7 @@ namespace Kleviy
                     LoadDataStaff.Visibility = Visibility.Visible;
                 }
             }
+            dataGridStaff.ItemsSource = GetStaff();
             GC.Collect();
         }
         //класс для данных
@@ -353,22 +354,49 @@ namespace Kleviy
 
         private void DeleteProductStaff_Click(object sender, RoutedEventArgs e)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            try
             {
-                connection.Open();
-                using (NpgsqlCommand command = new NpgsqlCommand("DELETE FROM Сотрудник WHERE id_сотрудник = @idStaff", connection))
+                if (dataGridStaff.SelectedItem == null)
                 {
-                    command.Parameters.AddWithValue("idStaff", ((Staffs)dataGridStaff.SelectedItem).idStaff);
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                    GC.Collect();
+                    MessageBox.Show("Выберите сотрудника для удаления", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
+
+                Staffs selectedStaff = dataGridStaff.SelectedItem as Staffs;
+                if (selectedStaff == null)
+                {
+                    MessageBox.Show("Выбранный элемент не является сотрудником", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (NpgsqlCommand command = new NpgsqlCommand("DELETE FROM Сотрудник WHERE id_сотрудник = @idStaff", connection))
+                    {
+                        command.Parameters.AddWithValue("idStaff", selectedStaff.idStaff);
+                        command.ExecuteNonQuery();
+                    }
+                    using (NpgsqlCommand command2 = new NpgsqlCommand("DELETE FROM Данные_для_входа WHERE id_Вход = @loginStaff", connection))
+                    {
+                        command2.Parameters.AddWithValue("loginStaff", selectedStaff.loginStaff);
+                        command2.ExecuteNonQuery();
+                    }
+                }
+                dataGridStaff.ItemsSource = GetStaff();
             }
-            dataGridStaff.ItemsSource = GetStaff();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка удаления сотрудника: " + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         //элементы для базы данных
-
+        // ОБНОВЛЕНИЕ БАЗЫ ДАННЫХ СОТРУДНИКОВ
+        public void RefreshDataGrid()
+        {
+            StaffGrid.Items.Refresh();
+        }
         public class Staffs
         {
             public int idStaff { get; set; }
@@ -382,7 +410,7 @@ namespace Kleviy
 
         //присвоение значений для datagrid из базы данных
 
-        private List<Staffs> GetStaff()
+        public List<Staffs> GetStaff()
         {
             List<Staffs> staff = new List<Staffs>();
             using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
