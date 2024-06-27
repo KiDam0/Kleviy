@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Spire.Doc;
 using Spire.Doc.Documents;
+using System.Collections.ObjectModel;
+using System.Data.SqlTypes;
 
 
 namespace Kleviy
@@ -24,6 +26,8 @@ namespace Kleviy
         public Home()
         {
             InitializeComponent();
+            dataGridProducts.ItemsSource = _products;
+            LoadProducts();
             List<string> tables = GetTablesFromDB();
             AllComboBox.ItemsSource = tables;
             Window = this;
@@ -64,6 +68,87 @@ namespace Kleviy
             GC.Collect();
         }
         private string _connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+
+        private ObservableCollection<Product> _products = new ObservableCollection<Product>();
+
+        //ПОИСК ТОВАРА
+
+        private void LoadProducts()
+        {
+            using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM Товар", connection))
+                {
+                    NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
+                    DataTable productsTable = new DataTable();
+
+                    adapter.Fill(productsTable);
+
+                    foreach (DataRow row in productsTable.Rows)
+                    {
+                        _products.Add(new Product
+                        {
+                            Id = (int)row["id_товар"],
+                            Name = (string)row["Наименование"],
+                            Colums = (int)row["Количество"],
+                            Price = (decimal)row["Цена"]
+                        });
+                    }
+                }
+            }
+        }
+
+        //ПОИСК ТОВАРА С ПОМОЩЬЮ ТЕКТБОКСА, ТОЛЬКО ТОГДА, КОГДА ПОЛЬЗОВАТЕЛЬ ПЕРЕСТАЕТ ПЕЧАТАТЬ
+
+        private void SearchProducts_KeyUp(object sender, KeyEventArgs e)
+        {
+            string searchTerm = SearchProducts.Text.Trim();
+
+            Console.WriteLine($"Search term: {searchTerm}");
+
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                _products.Clear();
+                LoadProducts(); // Load all products when search term is empty
+            }
+            else
+            {
+                _products.Clear();
+
+                using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
+                {
+                    connection.Open();
+
+                    using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM Товар WHERE LOWER(Наименование) LIKE '%' || LOWER(@searchTerm) || '%'", connection))
+                    {
+                        command.Parameters.AddWithValue("searchTerm", searchTerm);
+                        NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(command);
+                        DataTable productsTable = new DataTable();
+                        adapter.Fill(productsTable);
+
+                        foreach (DataRow row in productsTable.Rows)
+                        {
+                            _products.Add(new Product
+                            {
+                                Id = (int)row["id_товар"],
+                                Name = (string)row["Наименование"],
+                                Colums = (int)row["Количество"],
+                                Price = (decimal)row["Цена"]
+                            });
+                        }
+                        Console.WriteLine($"Products found: {_products.Count}");
+                    }
+                }
+                dataGridProducts.ItemsSource = _products; // Update the DataGrid with the new search results
+            }
+        }
+
+        private void SearchProducts_TextChanged(object sender, TextChangedEventArgs e)
+        {
+           
+        }
 
         //получение информации из базы данных
 
@@ -274,42 +359,6 @@ namespace Kleviy
         }
 
         //"UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, id_должность = @postStaff, id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection
-        //сохранить изменения 
-
-        //private void SaveChangesStaff_Click(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-        //        {
-        //            connection.Open();
-        //            using (NpgsqlCommand command = new NpgsqlCommand("UPDATE Сотрудник SET Фамилия = @surnameStaff, Имя = @nameStaff, Отчество = @patronymicStaff, Дата_рождения = @dateStaff, id_должность = @postStaff, id_Вход = @loginStaff WHERE id_сотрудник = @idStaff", connection))
-        //            {
-        //                foreach (Staffs staff in dataGridStaff.Items.OfType<Staffs>())
-        //                {
-        //                    command.Parameters.Clear();
-        //                    command.Parameters.AddWithValue("surnameStaff", staff.surnameStaff);
-        //                    command.Parameters.AddWithValue("nameStaff", staff.nameStaff);
-        //                    command.Parameters.AddWithValue("patronymicStaff", staff.patronymicStaff);
-        //                    command.Parameters.AddWithValue("dateStaff", staff.dateStaff);
-        //                    command.Parameters.AddWithValue("postStaff", staff.postStaff);
-        //                    command.Parameters.AddWithValue("loginStaff", staff.loginStaff);
-        //                    command.Parameters.AddWithValue("idStaff", staff.idStaff);
-        //                    command.ExecuteNonQuery();
-        //                    connection.Close();
-        //                    GC.Collect();
-        //                }
-
-        //            }
-        //        }
-        //        MessageBox.Show("Изменения сохранены");
-        //        dataGridStaff.ItemsSource = GetStaff();
-        //    }
-        //    catch (NpgsqlException ex)
-        //    {
-        //        MessageBox.Show("Ошибка при сохранении изменений: " + ex.Message);
-        //    }
-        //}
 
         //кнопка добавления данных
 
@@ -317,37 +366,6 @@ namespace Kleviy
         {
             AddStaff add = new AddStaff();
             add.Show();
-            //try
-            //{
-            //    if (dataGridStaff.SelectedItem == null)
-            //    {
-            //        MessageBox.Show("Please select a staff member to edit.");
-            //        return;
-            //    }
-
-            //    using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
-            //    {
-            //        connection.Open();
-            //        using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO Сотрудник (Фамилия, Имя, Отчество, Дата_рождения, id_должность, id_Вход) VALUES (@surnameStaff, @nameStaff, @patronymicStaff, @dateStaff, @postStaff, @loginStaff)", connection))
-            //        {
-            //            command.Parameters.AddWithValue("surnameStaff", ((Staffs)dataGridStaff.SelectedItem).surnameStaff);
-            //            command.Parameters.AddWithValue("nameStaff", ((Staffs)dataGridStaff.SelectedItem).nameStaff);
-            //            command.Parameters.AddWithValue("patronymicStaff", ((Staffs)dataGridStaff.SelectedItem).patronymicStaff);
-            //            command.Parameters.AddWithValue("dateStaff", ((Staffs)dataGridStaff.SelectedItem).dateStaff);
-            //            command.Parameters.AddWithValue("postStaff", ((Staffs)dataGridStaff.SelectedItem).postStaff);
-            //            command.Parameters.AddWithValue("loginStaff", ((Staffs)dataGridStaff.SelectedItem).loginStaff);
-            //            command.ExecuteNonQuery();
-            //            connection.Close();
-            //            GC.Collect();
-            //        }
-            //    }
-            //    dataGridStaff.ItemsSource = GetStaff();
-            //    MessageBox.Show("Новый сотрудник добавлен");
-            //}
-            //catch (NpgsqlException ex)
-            //{
-            //    MessageBox.Show("Ошибка при добавлении сотрудника: " + ex.Message);
-            //}
         }
 
         //кнопка удаления данных
@@ -676,6 +694,8 @@ namespace Kleviy
             var dt = ((DataView)AllGrid.ItemsSource).ToTable();
             ExportToWord(dt);
         }
+
+       
     }
 }
 //мусор

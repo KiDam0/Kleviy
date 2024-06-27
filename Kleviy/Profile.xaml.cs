@@ -9,6 +9,7 @@ using Npgsql;
 using System.Security.Cryptography;
 using System.Windows.Media;
 using System.Threading.Tasks;
+using System.Threading;
 
 
 namespace Kleviy
@@ -23,6 +24,20 @@ namespace Kleviy
             InitializeComponent();
             Profile_Loaded();
             LoadImage();
+
+            string savedImagePath = Properties.Settings.Default.UserImagePath;
+
+            if (!string.IsNullOrEmpty(savedImagePath) && File.Exists(savedImagePath))
+            {
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = new Uri(savedImagePath);
+                image.EndInit();
+
+                ProfilePNG.Source = image;
+                _previousImage = image;
+            }
         }
         //движение окна
         private void MovingWin(object sender, RoutedEventArgs e)
@@ -79,56 +94,66 @@ namespace Kleviy
                 connection.Close();
             }
         }
-        private async void btnOpen_Click(object sender, RoutedEventArgs e)
+        private BitmapImage _previousImage;
+
+        private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
-            // Откройте диалоговое окно для выбора файла
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
             if (openFileDialog.ShowDialog() == true)
             {
-                // Create a new BitmapImage object from the selected fill
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.UriSource = new Uri(openFileDialog.FileName, UriKind.Absolute);
-                image.EndInit();
+                // Hide the image and release the memory
+                ProfilePNG.Source = null;
 
-                // Unload the previous image from memory
-                if (ProfilePNG.Source != null)
+                string oldImagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserProfileImage.png");
+
+                // Save the new image to a temporary file
+                string tempFilePath = Path.GetTempFileName();
+                SaveImageToApplicationFolder(openFileDialog.FileName, tempFilePath);
+
+                // Replace the original file with the temporary file
+                File.Delete(oldImagePath);
+                File.Move(tempFilePath, oldImagePath);
+
+                // Load the new image and display it
+                BitmapImage newImage = new BitmapImage();
+                newImage.BeginInit();
+                newImage.CacheOption = BitmapCacheOption.OnLoad;
+                newImage.UriSource = new Uri(oldImagePath, UriKind.Absolute);
+                newImage.EndInit();
+
+                // Create a new stream and load the image from it
+                using (FileStream fs = new FileStream(oldImagePath, FileMode.Open, FileAccess.Read))
                 {
-                    ((BitmapImage)ProfilePNG.Source).UriSource = null;
+                    newImage.StreamSource = fs;
                 }
 
-                // Сохраните путь к выбранному изображению
-                string oldImagePath = Properties.Settings.Default.UserImagePath;
-                if (!string.IsNullOrEmpty(oldImagePath))
+                ProfilePNG.Source = newImage;
+
+                // Сохраняем путь к новому изображению в настройках
+                Properties.Settings.Default.UserImagePath = oldImagePath;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void SaveImageToApplicationFolder(string sourcePath, string destinationPath)
+        {
+            using (FileStream sourceStream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
+            {
+                using (FileStream destinationStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write))
                 {
-                    string newImagePath = Path.Combine(Path.GetDirectoryName(oldImagePath), $"image_{DateTime.Now:yyyyMMddHHmmss}.png");
-                    File.Copy(openFileDialog.FileName, newImagePath, true);
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.StreamSource = sourceStream;
+                    image.EndInit();
 
-                    // Обновите путь к изображению в настройках
-                    Properties.Settings.Default.UserImagePath = newImagePath;
-                    Properties.Settings.Default.Save();
-
-                    // Задержка перед удалением файла
-                    await Task.Delay(1500);
-
-                    // Удалите старое изображение
-                    if (File.Exists(oldImagePath))
-                    {
-                        File.Delete(oldImagePath);
-                    }
+                    BitmapEncoder encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(image));
+                    encoder.Save(destinationStream);
                 }
-                else
-                {
-                    // Если oldImagePath пуст, то можно использовать другой путь по умолчанию
-                    string newImagePath = Path.Combine(Environment.CurrentDirectory, $"image_{DateTime.Now:yyyyMMddHHmmss}.png");
-                    File.Copy(openFileDialog.FileName, newImagePath, true);
-                    Properties.Settings.Default.UserImagePath = newImagePath;
-                    Properties.Settings.Default.Save();
-                }
-
-                // Загрузите изображение в элемент Image
-                ProfilePNG.Source = image;
             }
         }
 
@@ -142,32 +167,20 @@ namespace Kleviy
         {
             string login = Properties.Settings.Default.Login;
             string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", login);
-            if (Directory.Exists(folderPath))
-            {
-                string[] filePaths = Directory.GetFiles(folderPath, "image_*.png");
-                if (filePaths.Length > 0 && File.Exists(filePaths[0]))
-                {
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.UriSource = new Uri(filePaths[0], UriKind.Absolute);
-                    image.EndInit();
+            string imagePath = Properties.Settings.Default.UserImagePath;
 
-                    ProfilePNG.Source = image;
-                }
-                else
-                {
-                    Console.WriteLine("Не найдено изображение профиля: " + login);
-                }
+            if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+            {
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(imagePath, UriKind.Absolute);
+                image.EndInit();
+
+                ProfilePNG.Source = image;
             }
             else
             {
-                Console.WriteLine("Не найден путь изображения для этого пользователя: " + login);
-            }
-
-            // Проверка на существование файла по пути в настройках
-            if (!File.Exists(Properties.Settings.Default.UserImagePath))
-            {
-                Console.WriteLine("Файл изображения не найден по пути в настройках");
+                Console.WriteLine("Не найдено изображение профиля: " + login);
             }
         }
 
