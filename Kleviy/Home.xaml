@@ -24,8 +24,8 @@
         <!--Углы-->
 
         <Border 
-        Background="white"
-        BorderBrush="White"
+        Background="#7A92A9"
+        BorderBrush="#7A92A9"
         BorderThickness="5"
         CornerRadius="5,5,0,5"/>
 
@@ -40,7 +40,7 @@
          HorizontalAlignment="Left" 
          Margin="810,4,0,0" 
          Width="37" 
-         Background="White" 
+         Background="#5D6C7A" 
          RenderTransformOrigin="0.55,0.344" 
          Foreground="#DD000000" 
          BorderBrush="{x:Null}" 
@@ -54,7 +54,7 @@
          Content="x" 
          Click="CloseButton_Click" 
          Margin="852,4,0,0" 
-         Background="#FFCA4949" 
+         Background="#2D4E6E" 
          RenderTransformOrigin="0.55,0.344" 
          Height="32" 
          VerticalAlignment="Top" 
@@ -69,8 +69,8 @@
           Content="Товары"
           Click="TovBt_Click"
           Margin="0,47,730,0" 
-          Background="White" 
-          BorderBrush="White"    
+          Background="#F0D2A8" 
+          BorderBrush="#A97F43"    
           Foreground="#DD000000" 
           FontSize="18" 
           Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
@@ -88,8 +88,8 @@
           Content="Поставщики"
           Click="PostBt_Click"
           Margin="0,47,556,0" 
-          Background="White" 
-          BorderBrush="White" 
+          Background="#F0D2A8" 
+          BorderBrush="#A97F43"
           Foreground="#DD000000" 
           FontSize="18" 
           Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
@@ -115,9 +115,9 @@
           Height="181" 
           VerticalAlignment="Top">
             <Image 
-      Height="186" 
-      Width="167" 
-      Source="/png/glavnaya.png"/>
+          Height="186" 
+          Width="167" 
+          Source="/PNG/glavnaya.png"/>
         </Button>
 
         <!--Сотрудники-->
@@ -127,8 +127,8 @@
           Content="Сотрудники"
           Click="SotrBt_Click"
           Margin="0,47,189,0" 
-          Background="White" 
-          BorderBrush="White" 
+          Background="#F0D2A8" 
+          BorderBrush="#A97F43"
           Foreground="#DD000000" 
           FontSize="18" 
           Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
@@ -144,8 +144,8 @@
           x:Name="ProfileBt" 
           Content="Профиль" 
           Margin="0,47,10,0" 
-          Background="White" 
-          BorderBrush="White" 
+          Background="#F0D2A8" 
+          BorderBrush="#A97F43" 
           Foreground="#DD000000" 
           FontSize="18" 
           Effect="{Binding ClickMode.Press.Hover, ElementName=button}" 
@@ -158,31 +158,45 @@
 
         <!--Главное окно-->
 
-        <Grid x:Name="Main" Visibility="Collapsed">
+        <Grid x:Name="Main" Visibility="Visible">
             <Button Margin="706,234,40,0"
                 x:Name="ExecuteQuery"
                 Content="Найти"
-                Click="ExecuteQuery_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+                Click="ExecuteQuery_Click"
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43"
+                    Foreground="#DD000000" 
+                    Height="32" 
+                    VerticalAlignment="Top" />
             <Button Margin="706,300,40,0"
-    x:Name="LoadToWord"
-    Content="Сохранить"
-    Click="LoadToWord_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+                    x:Name="LoadToWord"
+                    Content="Сохранить"
+                    Click="LoadToWord_Click"
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43"
+                    Foreground="#DD000000" 
+                    Height="32" 
+                    VerticalAlignment="Top" />
             <TextBox
-            x:Name="NumberSupl"
-                Height="50"
+                x:Name="NumberSupl"
+                Height="34"
                 VerticalAlignment="Top"
                 materialDesign:HintAssist.Hint="№ поставщика"
                 MaxLength="40"
                 TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Auto" Margin="30,216,750,0" FontSize="17" />
+                VerticalScrollBarVisibility="Auto" 
+                Margin="10,232,770,0" 
+                FontSize="17" />
 
             <DataGrid
             x:Name="AllGrid"
                 AutoGenerateColumns="True"
                 CanUserAddRows="False"
                 HeadersVisibility="All"
+                Background="#F0D2A8" 
+                BorderBrush="#A97F43"
                 ItemsSource="{Binding connectionString}"
-                SelectionUnit="{Binding ElementName=selectionUnitComboBox, Path=SelectedValue}" Margin="0,300,251,0" SelectionChanged="AllGrid_SelectionChanged">
+                SelectionUnit="{Binding ElementName=selectionUnitComboBox, Path=SelectedValue}" Margin="6,300,251,6" SelectionChanged="AllGrid_SelectionChanged">
             </DataGrid>
 
             <ComboBox
@@ -199,10 +213,14 @@
 
         <!--Окно товаров-->
 
-        <Grid x:Name="Products" Visibility="Visible" >
+        <Grid x:Name="Products" Visibility="Collapsed" >
 
             <!--база данных админа-->
-            <DataGrid x:Name="dataGridProducts" AutoGenerateColumns="False" Margin="0,217,10,0">
+            <DataGrid x:Name="dataGridProducts"
+                      AutoGenerateColumns="False" 
+                      Margin="10,251,10,10"
+                      Background="#F0D2A8" 
+                      BorderBrush="#A97F43">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
                     <DataGridTextColumn Header="Наименование" Binding="{Binding Name}" />
@@ -210,47 +228,69 @@
                     <DataGridTextColumn Header="Цена" Binding="{Binding Price}" />
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Margin="502,180,173,383">
+            <StackPanel Margin="489,212,186,351">
                 <TextBox
                     x:Name="SearchProducts"
                     MaxWidth="400"
                     materialDesign:HintAssist.Hint="Поиск товара"
                     AcceptsReturn="True"
                     KeyUp="SearchProducts_KeyUp"
-                    IsEnabled="{Binding IsChecked, ElementName=MaterialDesignFilledTextBoxEnabledComboBox}"
                     TextWrapping="Wrap" Width="227" Height="31" FontSize="14" TextChanged="SearchProducts_TextChanged" />
             </StackPanel>
 
-            <Button Margin="10,180,736,0"
+            <Button Margin="10,212,729,0"
                 x:Name="SaveDataProducts"
                 Content="Сохранить данные"
-                Click="SaveChanges_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+                Click="SaveChanges_Click"
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43" 
+                    Foreground="#DD000000" 
+                    Height="32" 
+                    VerticalAlignment="Top" />
 
-            <Button Margin="184,180,562,0"
-                x:Name="DeleteDataProducts"
-                Content="Добавить данные"
-                Click="AddNewProduct_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+            <Button Margin="190,212,556,0"
+                    x:Name="DeleteDataProducts"
+                    Content="Добавить данные"
+                    Click="AddNewProduct_Click" 
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43" 
+                    Foreground="#DD000000" 
+                    Height="32" 
+                    VerticalAlignment="Top" />
 
-            <Button Margin="732,180,10,0"
-                x:Name="AddDataProducts"
-                Content="Удалить данные"
-                Click="DeleteProduct_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+            <Button Margin="731,212,10,0"
+                    x:Name="AddDataProducts"
+                    Content="Удалить данные"
+                    Click="DeleteProduct_Click"
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43"
+                    Foreground="#DD000000" 
+                    Height="32" 
+                    VerticalAlignment="Top" />
         </Grid>
 
         <!--Окно поставщиков-->
 
-        <Grid x:Name="Suppliers" Visibility="Collapsed" >
+        <Grid x:Name="Suppliers" Visibility="Collapsed" Margin="0,0,0,10" >
             <DataGrid
-                 x:Name="SuppliersGrid"
-                 AutoGenerateColumns="True"
-                 CanUserAddRows="True"
-                 ItemsSource="{Binding connectionString}"
-                 SelectionMode="Extended"
-                 SelectionUnit="Cell" Margin="0,217,10,0"  Foreground="Black" SelectionChanged="SuppliersGrid_SelectionChanged" />
-            <Button Margin="736,180,10,388"
+                x:Name="SuppliersGrid"
+                AutoGenerateColumns="True"
+                CanUserAddRows="True"
+                ItemsSource="{Binding connectionString}"
+                SelectionMode="Extended"
+                SelectionUnit="Cell" 
+                Margin="10,235,10,0" 
+                Background="#F0D2A8" 
+                BorderBrush="#A97F43"
+                Foreground="Black"
+                SelectionChanged="SuppliersGrid_SelectionChanged" />
+            <Button Margin="736,192,10,366"
                 x:Name="LoadDataSuppliers"
                 Content="Загрузить данные"
-                Click="LoadDataSuppliers_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
+                Click="LoadDataSuppliers_Click" 
+                Background="#F0D2A8" 
+                BorderBrush="#A97F43" 
+                Foreground="#DD000000" />
 
         </Grid>
 
@@ -265,16 +305,26 @@
              CanUserAddRows="True"
              ItemsSource="{Binding connectionString}"
              SelectionMode="Extended"
-             SelectionUnit="Cell" Margin="0,217,10,0"  Foreground="Black" SelectionChanged="SuppliersGrid_SelectionChanged" />
+             SelectionUnit="Cell"
+                Margin="10,217,10,10"
+                Background="#F0D2A8" 
+                BorderBrush="#A97F43"
+                Foreground="Black"
+                SelectionChanged="SuppliersGrid_SelectionChanged" />
             <Button Margin="736,180,10,388"
                 x:Name="LoadDataStaff"
                 Content="Загрузить данные"
-                Click="LoadDataStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" />
+                Click="LoadDataStaff_Click" 
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43" 
+                    Foreground="#DD000000" />
             <!--БАЗА ДАННЫХ АДМИНА-->
             <DataGrid x:Name="dataGridStaff" 
                       AutoGenerateColumns="False" 
-                      Margin="0,217,10,0"
-                      Visibility="Collapsed">
+                      Margin="10,217,10,10"
+                      Visibility="Collapsed"
+                      Background="#F0D2A8" 
+                      BorderBrush="#A97F43">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding idStaff}" />
                     <DataGridTextColumn Header="Фамилия" Binding="{Binding surnameStaff}" />
@@ -288,15 +338,25 @@
 
             <Button Margin="10,180,736,0"
             x:Name="AddDataStaff"
-            Visibility="Visible"
+            Visibility="Collapsed"
             Content="Добавить данные"
-            Click="AddNewProductStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+            Click="AddNewProductStaff_Click" 
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43" 
+                    Foreground="#DD000000" 
+                    Height="32" 
+                    VerticalAlignment="Top" />
 
             <Button Margin="732,180,10,0"
             x:Name="DeleteDataStaff"
             Visibility="Collapsed"
             Content="Удалить данные"
-            Click="DeleteProductStaff_Click" Background="White" BorderBrush="White" Foreground="#DD000000" Height="32" VerticalAlignment="Top" />
+            Click="DeleteProductStaff_Click" 
+                    Background="#F0D2A8" 
+                    BorderBrush="#A97F43" 
+                    Foreground="#DD000000"
+                    Height="32"
+                    VerticalAlignment="Top" />
         </Grid>
     </Grid>
 </Window>

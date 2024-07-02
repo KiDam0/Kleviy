@@ -17,8 +17,8 @@
     <Grid>
         <!--углы-->
         <Border 
-                Background="white"
-                BorderBrush="White"
+                Background="#7A92A9"
+                BorderBrush="#7A92A9"
                 BorderThickness="5"
                 CornerRadius="5,5,5,5">
         </Border>
@@ -39,7 +39,7 @@
                 HorizontalAlignment="Left" 
                 Margin="301,10,0,658" 
                 Width="46" 
-                Background="White" 
+                Background="#5D6C7A" 
                 RenderTransformOrigin="0.55,0.344" 
                 Foreground="#DD000000" 
                 BorderBrush="{x:Null}" />
@@ -51,10 +51,10 @@
                 HorizontalAlignment="Left" 
                 Margin="352,10,0,658" 
                 Width="38" 
-                Background="#FFCA4949" 
+                Background="#2D4E6E" 
                 RenderTransformOrigin="0.55,0.344" 
                 BorderBrush="{x:Null}" />
-        
+
         <!--Бокс для логина-->
 
         <TextBox
@@ -102,8 +102,8 @@
         VerticalAlignment="Top" 
         HorizontalAlignment="Left" 
         Width="355" 
-        Background="{x:Null}" 
-        BorderBrush="#FF5F5F5F" 
+        Background="#F0D2A8" 
+        BorderBrush="#A97F43"
         Foreground="#DD000000" 
         FontSize="24" 
         Click="Login_Click" 

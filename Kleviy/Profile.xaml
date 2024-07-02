@@ -15,7 +15,8 @@
         AllowsTransparency="True"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Background="Gainsboro">
+        Background="#7A92A9"
+        BorderBrush="#7A92A9">
     <Grid>
 
         <!--Кнопки шапки-->
@@ -29,7 +30,7 @@
          HorizontalAlignment="Left" 
          Margin="276,4,0,0" 
          Width="61" 
-         Background="White" 
+         Background="#5D6C7A" 
          RenderTransformOrigin="0.55,0.344" 
          Foreground="#DD000000" 
          BorderBrush="{x:Null}" 
@@ -43,15 +44,16 @@
          Content="x" 
          Click="CloseButton_Click" 
          Margin="342,4,0,0" 
-         Background="#FFCA4949" 
+         Background="#2D4E6E"
          RenderTransformOrigin="0.55,0.344" 
          Height="32" 
          VerticalAlignment="Top" 
          HorizontalAlignment="Left" 
          Width="48" 
          BorderBrush="{x:Null}" />
-        <Border Background="white"
-        BorderBrush="White"
+        <Border 
+        Background="#7A92A9"
+        BorderBrush="#7A92A9"
         BorderThickness="1"
         CornerRadius="5,5,5,5" Margin="10,58,10,22">
 
@@ -77,7 +79,10 @@
                 Name="btnOpen" 
                 VerticalAlignment="Top" 
                 Width="74" 
-                Click="btnOpen_Click" ClipToBounds="True" Background="White" BorderBrush="White">
+                Click="btnOpen_Click" 
+                ClipToBounds="True" 
+                Background="{x:Null}" 
+                BorderBrush="{x:Null}">
             <Image
                 Width="46"
                 Height="56"
