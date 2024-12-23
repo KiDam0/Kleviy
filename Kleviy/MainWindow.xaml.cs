@@ -13,7 +13,7 @@ namespace Kleviy
     public partial class MainWindow : Window
     {
         public static MainWindow Window;
-        private string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+        private string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
         public MainWindow()
         {
             InitializeComponent();

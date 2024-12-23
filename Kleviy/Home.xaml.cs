@@ -22,7 +22,7 @@ namespace Kleviy
     public partial class Home : Window
     {
         public Home Window;
-        string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+        string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
         public Home()
         {
             InitializeComponent();
@@ -67,7 +67,7 @@ namespace Kleviy
             }
             GC.Collect();
         }
-        private string _connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+        private string _connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
 
         private ObservableCollection<Product> _products = new ObservableCollection<Product>();
 
@@ -569,7 +569,7 @@ namespace Kleviy
 
         private void LoadDataAll(string tableName)
         {
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+            string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
             using (var conn = new NpgsqlConnection(connectionString))
             {
                 conn.Open();
@@ -593,7 +593,7 @@ namespace Kleviy
         private List<string> GetTablesFromDB()
         {
             List<string> tables = new List<string>();
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+            string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
             using (var conn = new NpgsqlConnection(connectionString))
             {
                 conn.Open();
@@ -622,7 +622,7 @@ namespace Kleviy
 
         private void LoadDataSuppliers_Click(object sender, RoutedEventArgs e)
         {
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+            string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
             string query = "SELECT * FROM Поставщик";
 
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
@@ -642,7 +642,7 @@ namespace Kleviy
 
         private void LoadDataStaff_Click(object sender, RoutedEventArgs e)
         {
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+            string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
             string query = "SELECT * FROM Сотрудник";
 
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
@@ -661,7 +661,7 @@ namespace Kleviy
         private void ExecuteQuery_Click(object sender, RoutedEventArgs e)
         {
             DataTable dataTable = new DataTable();
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+            string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
             try
             {
                 // Получаем запрос из текстового поля

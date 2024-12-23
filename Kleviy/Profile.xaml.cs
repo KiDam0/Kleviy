@@ -65,7 +65,7 @@ namespace Kleviy
         }
         private void LoadUserData()
         {
-            string connectionString = "Host = localhost; Port = 5433; Database = Учёт_товара; Username = postgres; Password = 123";
+            string connectionString = "Host = dpg-ctcmjq23esus73bingtg-a.frankfurt-postgres.render.com; Port = 5432; Database = kleviy; Username = kleviy_user; Password = bt5fPvG8DrpyvGRGHUMPAc6lJz2mdBjE";
 
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
